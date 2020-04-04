@@ -1,26 +1,14 @@
 use std::collections::HashSet;
 
-fn map_char_to_number(letter: &char) -> char {
-    let set_one: HashSet<char> = vec!['B', 'F', 'P', 'V'].into_iter().collect();
-    let set_two: HashSet<char> = vec!['C', 'G', 'J', 'K', 'Q', 'S', 'X', 'Z']
-        .into_iter()
-        .collect();
-    let set_three: HashSet<char> = vec!['D', 'T'].into_iter().collect();
-    let set_four: HashSet<char> = vec!['L'].into_iter().collect();
-    let set_five: HashSet<char> = vec!['M', 'N'].into_iter().collect();
-    if set_one.contains(letter) {
-        '1'
-    } else if set_two.contains(letter) {
-        '2'
-    } else if set_three.contains(letter) {
-        '3'
-    } else if set_four.contains(letter) {
-        '4'
-    } else if set_five.contains(letter) {
-        '5'
-    } else {
-        // R
-        '6'
+fn map_char_to_letter(letter: &char) -> char {
+    match letter {
+        'B' | 'F' | 'P' | 'V' => '1',
+        'C' | 'G' | 'J' | 'K' | 'Q' | 'S' | 'X' | 'Z' => '2',
+        'D' | 'T' => '3',
+        'L' => '4',
+        'M' | 'N' => '5',
+        'R' => '6',
+        _ => '0',
     }
 }
 
