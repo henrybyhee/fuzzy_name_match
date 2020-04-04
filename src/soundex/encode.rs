@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-fn map_char_to_letter(letter: &char) -> char {
+fn map_char_to_number(letter: &char) -> char {
     match letter {
         'B' | 'F' | 'P' | 'V' => '1',
         'C' | 'G' | 'J' | 'K' | 'Q' | 'S' | 'X' | 'Z' => '2',
