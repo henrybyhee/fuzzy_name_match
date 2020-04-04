@@ -133,7 +133,7 @@ mod test {
         let name1 = "Jame Bond";
         let name2 = "Bane Jimmy";
         let score = matcher.compare(name1, name2);
-        assert_eq!(score, 0.5);
+        assert!(score - 0.333 < 0.1 );
     }
 
     #[test]
@@ -142,7 +142,7 @@ mod test {
         let name1 = "Robert Downey Junior";
         let name2 = "Anthony Rupert";
         let score = matcher.compare(name1, name2);
-        assert_eq!(score, 0.5);
+        assert_eq!(score, 0.25);
     }
 
     #[test]
@@ -151,7 +151,7 @@ mod test {
         let name1 = "Jame Bond";
         let name2 = "Bane Jimmy";
         let score = matcher.compare(name1, name2);
-        assert_eq!(score, 0.25);
+        assert!(score - 0.1666 < 0.01);
     }
 
     #[test]
