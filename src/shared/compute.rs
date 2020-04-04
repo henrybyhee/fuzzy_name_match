@@ -3,16 +3,11 @@ use std::collections::HashSet;
 
 // Jaccard Index computes similarity score between
 // two hash sets.
-// Formula is (# of similar items)/ (Minimum Hashsize)
+// Formula is (A ∩ B) / (A U B)
 pub fn jaccard_index(s1: &HashSet<String>, s2: &HashSet<String>) -> f64 {
-    let mut overlaps: f64 = 0.;
-    for word in s1.iter() {
-        if s2.contains(&word[..]) {
-            overlaps += 1.;
-        }
-    }
-    let min = cmp::min(s1.len(), s2.len()) as f64;
-    overlaps / min
+    let overlaps: f64 = s1.intersection(s2).count() as f64;
+    let union = s1.union(s2).count() as f64;
+    overlaps / union
 }
 
 #[cfg(test)]
@@ -30,9 +25,8 @@ mod test {
     fn test_jaccard_index() {
         let name1: HashSet<String> = build_map_from_word_vec(vec!["AB", "BC"]);
         let name2: HashSet<String> = build_map_from_word_vec(vec!["BC", "AA"]);
-
         let coef = jaccard_index(&name1, &name2);
-        assert_eq!(coef, 0.5);
+        assert!(coef - 0.333 < 0.01);
     }
 
     #[test]
