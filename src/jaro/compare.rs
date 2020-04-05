@@ -37,13 +37,7 @@ impl JaroWinklerMatcher {
     }
 }
 
-impl Clean for JaroWinklerMatcher {
-    fn clean(&self, string: &str) -> String {
-        let mut preprocessed = string.replace(|c: char| !c.is_alphanumeric(), " ");
-        preprocessed.make_ascii_uppercase();
-        preprocessed
-    }
-}
+impl Clean for JaroWinklerMatcher {}
 
 impl Compare for JaroWinklerMatcher {
     fn compare(&self, s1: &str, s2: &str) -> f64 {
@@ -69,6 +63,14 @@ mod test {
         let matcher = super::JaroWinklerMatcher::default();
         let name1 = "joh^ doe";
         let name2 = "joh**doe";
+        assert_eq!(matcher.compare(name1, name2), 1.0);
+    }
+
+    #[test]
+    fn test_whitespaces_match() {
+        let matcher = super::JaroWinklerMatcher::default();
+        let name1 = "  john doe   ";
+        let name2 = "JOHN DOE";
         assert_eq!(matcher.compare(name1, name2), 1.0);
     }
 

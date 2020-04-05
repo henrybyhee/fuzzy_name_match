@@ -7,9 +7,12 @@ pub mod soundex;
 pub trait Clean {
     fn clean(&self, s1: &str) -> String {
         // Replaces all non-alphabetic with whitespace
-        let mut s1 = s1.replace(|c: char| !c.is_alphabetic(), " ");
-        s1.make_ascii_uppercase();
-        s1
+        let mut cleaned = s1
+            .replace(|c: char| !c.is_alphabetic(), " ")
+            .trim()
+            .to_owned();
+        cleaned.make_ascii_uppercase();
+        cleaned
     }
 }
 
