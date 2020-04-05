@@ -133,7 +133,7 @@ mod test {
         let name1 = "Jame Bond";
         let name2 = "Bane Jimmy";
         let score = matcher.compare(name1, name2);
-        assert!(score - 0.333 < 0.1 );
+        assert!(score - 0.333 < 0.1);
     }
 
     #[test]
