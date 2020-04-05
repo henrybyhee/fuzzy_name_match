@@ -122,11 +122,14 @@ are calculated. The higher the score, the more similar the strings.
 
 **Illustration**: "John Robert Doe" vs "Jim Rupert"
 
-1. Tokenized: 
+1. Tokenized:
    - {"John", "Robert", "Doe"} vs {"Jim", "Rupert"}
-2. Apply soundex: 
+2. Apply soundex:
    - {"J500", "R163", "D00"} vs {"J500", "R163"}
-3. Jaccard Index: 2 ("J500", "R163") / 3 ("J500", "R163", "D00") = 0.66667
+3. Jaccard Index:
+   - Ovelapping = {"J500", "R163"}
+   - Union = {"J500", "R163", "D00"}  
+   - 2/3 = 0.66667
 
 ### Use Case
 
@@ -135,7 +138,6 @@ are calculated. The higher the score, the more similar the strings.
 - Higher recall than Classic Soundex.
 - Every components within a name are taken into consideration.
 - Works on transposed name. "Rubert Jim" vs "John Rupert"
-- High 
 
 **Weakness:**
 
