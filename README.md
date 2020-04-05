@@ -168,8 +168,8 @@ let score = name_matcher.compare(name_1, name_2); // 1.0
 
 ## Practical Use
 
-Each algorithm has its set of weaknesses in matching names. Hence, a better approach would be to construct an ensemble model by combining two or more algorithms.
-It would be useful to have a balanced mix of algorithms with high recall and high precision, weighing their score equally. This can be achieved using this 
+Each algorithm has its own set of weaknesses. Hence, a better approach would be to construct an ensemble model by combining two or more of such algorithms.
+It is important to have a balanced mix of algorithms with high recall and high precision by weighing their score equally. This can be achieved using this 
 library by setting the `weight` of every `Matcher` instances upfront.
 
 Refer to [example](/examples/ensemble.rs).
