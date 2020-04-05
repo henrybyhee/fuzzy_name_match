@@ -4,7 +4,7 @@ missing components and pronunciation. These algorithms are designed to
 capture similarity between non-identical name sequences by assigning probability to a match between
 0.0 and 1.0. Input names are preprocessed and transformed before comparison.
 
-# Implementation Notes
+# Implementation Note
 
 You'll find the following fuzzy string matching algorithms in this library:
 
@@ -13,7 +13,9 @@ You'll find the following fuzzy string matching algorithms in this library:
 3. **[Soundex](#3-soundex-classic)**
 4. **[Soundex-Jaccard](#4-soundex-jaccard-custom)**
 
-Each of these algorithms excel at solving different challenges of name matching. You'll find that they are complementary in nature.
+Each of these algorithms excel at solving different challenges of name matching. You'll find that they tend to be rather complementary.
+This suggests that they work well in [combination](#practical-use).
+
 To better tackle the challenge of name matching, each algorithm comes with a preprocessing stage and a comparison stage.
 Input names undergo a series of preprocessing first before similary score is calculated in the subsequent comparison stage.
 
@@ -52,7 +54,7 @@ let score = name_matcher.compare(name_1, name_2); //0.9666667
 
 ## 2. Jaccard Index (Classic)
 
-Measures overlapping tokens between two strings, defined by intersection divided by the size of their union. The higher the score, the more similar the strings are.
+Measures overlapping tokens between two strings, defined by their intersection divided by the size of their union. The higher the score, the more similar the strings are.
 Names are tokenized by whitespace before score is calculated. See [wikipedia](https://en.wikipedia.org/wiki/Jaccard_index).
 
 ### Use Case
@@ -85,7 +87,7 @@ let score = name_matcher.compare(name_1, name_2); // 0.33333
 
 ## 3. Soundex (Classic)
 
-Measures phoentic similarity between strings. Names are encoded to their Soundex form before comparison. See [wikipedia](https://en.wikipedia.org/wiki/Soundex).
+Measures phoentic similarity between strings. Names are encoded in their Soundex form before comparison. See [wikipedia](https://en.wikipedia.org/wiki/Soundex).
 Score is binary [0.0, 1.0].
 
 ### Use Case
@@ -120,8 +122,8 @@ let score = name_matcher.compare(name_1, name_2); // 1.0
 
 ## 4. Soundex-Jaccard (Custom)
 
-An improvement over [Naive Soundex](#3-soundex-classic). Each name is tokenized (splitting by first whitespace) first, before encoding every token to Soundex form. Jaccard Index of the two names
-are calculated. The higher the score, the more similar the strings.
+An improvement over [Naive Soundex](#3-soundex-classic). Each name is tokenized first before encoded in Soundex form. Jaccard Index of the two names
+is then calculated. The higher the score, the more similar the strings.
 
 **Illustration**: "John Robert Doe" vs "Jim Rupert"
 
@@ -140,7 +142,7 @@ are calculated. The higher the score, the more similar the strings.
 
 - Higher recall than Classic Soundex.
 - Every components within a name are taken into consideration.
-- Works on transposed name. "Rubert Jim" vs "John Rupert"
+- Works on transposed name. "Robert Jim" vs "John Rupert"
 
 **Weakness:**
 
@@ -164,7 +166,7 @@ let name_matcher = compare::SoundexJaccardMatcher::default();
 let score = name_matcher.compare(name_1, name_2); // 1.0
 ```
 
-## General Notes
+## Practical Use
 
 Each algorithm has its set of weaknesses in matching names. Hence, a better approach would be to construct an ensemble model by combining two or more algorithms.
 It would be useful to have a balanced mix of algorithms with high recall and high precision, weighting their score equally. This can be achieved using this 
