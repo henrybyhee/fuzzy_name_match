@@ -36,6 +36,7 @@ Name transpositions such as 'John Doe' vs 'Doe, John'. Also lacking linguistic n
 ### Preprocessing
 
 - Non alpha-numeric characters are converted to whitespace.
+- Trim leading and ending whitespaces.
 - All characters are converted to uppercase.
 
 ### Usage
@@ -68,6 +69,7 @@ Spelling mistakes. Slight character variation within a token can drastically red
 ### Preprocessing
 
 - Non alpha-numeric characters are converted to whitespace.
+- Trim leading and ending whitespaces.
 - All characters are converted to uppercase.
 
 ### Usage
@@ -101,6 +103,7 @@ Score is binary [0.0, 1.0].
 ### Preprocessing
 
 - Non alpha-numeric characters are converted to whitespace.
+- Trim leading and ending whitespaces.
 - All characters are converted to uppercase.
 - Reduced to their Soundex form.
 
@@ -146,6 +149,7 @@ are calculated. The higher the score, the more similar the strings.
 ### Preprocessing
 
 - Non alpha-numeric characters are converted to whitespace.
+- Trim leading and ending whitespaces.
 - All characters are converted to uppercase.
 - Reduced to their Soundex form.
 

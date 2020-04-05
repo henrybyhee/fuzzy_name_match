@@ -63,6 +63,14 @@ mod test {
     }
 
     #[test]
+    fn test_whitespaces_match() {
+        let matcher = super::JaccardMatcher::default();
+        let name1 = "  john    doe   ";
+        let name2 = "JOHN DOE";
+        assert_eq!(matcher.compare(name1, name2), 1.0);
+    }
+
+    #[test]
     fn test_weighted_match() {
         let matcher = super::JaccardMatcher::new(Some(0.5));
         let name1 = "JOHN DOE";

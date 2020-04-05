@@ -1,4 +1,3 @@
-use std::cmp;
 use std::collections::HashSet;
 
 // Jaccard Index computes similarity score between
