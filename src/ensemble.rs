@@ -26,7 +26,7 @@ impl Ensemble {
         sum
     }
 
-    pub fn get_match_results<'a>(&self, name1: &'a str, name2: &'a str) -> Vec<MatchResult<'a>> {
+    pub fn get_match_results(&self, name1: &str, name2: &str) -> Vec<MatchResult> {
         let mut results: Vec<MatchResult> = Vec::new();
         for matcher in self.matchers.iter() {
             let match_result = matcher.get_match_result(name1, name2);

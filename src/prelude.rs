@@ -3,31 +3,24 @@ use serde::{Deserialize, Serialize};
 // MatcherRule represents the matching result
 // in greated detail
 #[derive(Serialize, Deserialize, Debug)]
-pub struct MatchResult<'a> {
+pub struct MatchResult {
     name: String,
-    #[serde(borrow)]
-    input_strings: Vec<&'a str>,
     weight: f64,
     absolute_score: f64,
     weighted_score: f64,
 }
 
-impl MatchResult<'_> {
-    pub fn new<'a>(
-        name: &str,
-        input_strings: Vec<&'a str>,
-        weight: f64,
-        score: f64,
-    ) -> MatchResult<'a> {
+impl MatchResult {
+    pub fn new<'a>(name: &str, weight: f64, score: f64) -> MatchResult {
         MatchResult {
             name: name.to_owned(),
-            input_strings,
             weight,
             absolute_score: score,
             weighted_score: score * weight,
         }
     }
 }
+
 
 // Clean trait handles string preprocessing before comparison can take place.
 pub trait Clean {
@@ -66,9 +59,8 @@ pub trait Matcher: Clean + Weighted + Named {
     }
 
     // get_match_result returns the MatchReult of the Comparison operation
-    fn get_match_result<'a>(&self, s1: &'a str, s2: &'a str) -> MatchResult<'a> {
-        let input_strings = vec![s1, s2];
+    fn get_match_result(&self, s1: &str, s2: &str) -> MatchResult {
         let score = self.get_score(s1, s2);
-        MatchResult::new(self.get_name(), input_strings, self.get_weight(), score)
+        MatchResult::new(self.get_name(), self.get_weight(), score)
     }
 }
