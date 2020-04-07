@@ -23,6 +23,12 @@ impl SoundexMatcher {
 
 impl Clean for SoundexMatcher {}
 
+impl Weighted for SoundexMatcher {
+    fn get_weight(&self) -> f64 {
+        self.weight
+    }
+}
+
 impl Compare for SoundexMatcher {
     fn compare(&self, s1: &str, s2: &str) -> f64 {
         let cleaned_s1 = self.clean(s1);
@@ -76,6 +82,12 @@ impl SoundexJaccardMatcher {
 }
 
 impl Clean for SoundexJaccardMatcher {}
+
+impl Weighted for SoundexJaccardMatcher {
+    fn get_weight(&self) -> f64 {
+        self.weight
+    }
+}
 
 impl Compare for SoundexJaccardMatcher {
     fn compare(&self, s1: &str, s2: &str) -> f64 {
