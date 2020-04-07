@@ -1,5 +1,5 @@
+use super::super::prelude::*;
 use super::super::shared::compute;
-use super::super::{Clean, Compare};
 use super::encode;
 use std::collections::HashSet;
 
@@ -89,7 +89,7 @@ impl Compare for SoundexJaccardMatcher {
 
 #[cfg(test)]
 mod test {
-    use super::super::super::Compare;
+    use super::super::super::prelude::*;
     use super::SoundexJaccardMatcher;
     use super::SoundexMatcher;
     #[test]

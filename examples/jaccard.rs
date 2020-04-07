@@ -1,7 +1,7 @@
 extern crate name_match;
 
 use name_match::jaccard::compare;
-use name_match::Compare;
+use name_match::prelude::*;
 
 
 fn main(){

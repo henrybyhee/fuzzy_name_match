@@ -1,5 +1,5 @@
+use super::super::prelude::*;
 use super::super::shared::compute;
-use super::super::{Clean, Compare};
 use std::collections::HashSet;
 
 pub struct JaccardMatcher {
@@ -45,7 +45,7 @@ impl Compare for JaccardMatcher {
 
 #[cfg(test)]
 mod test {
-    use super::super::super::*;
+    use super::super::super::prelude::*;
     #[test]
     fn test_case_sensitive_match() {
         let matcher = super::JaccardMatcher::default();
