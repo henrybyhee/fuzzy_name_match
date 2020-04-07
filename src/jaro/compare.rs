@@ -10,6 +10,7 @@ use super::config;
 //   - Replaces non-alphanumeric with whitespace
 //   - Convert to uppercase.
 pub struct JaroWinklerMatcher {
+    name: String,
     config: config::JaroWinklerConfigOptions,
     weight: f64,
 }
@@ -23,6 +24,7 @@ impl JaroWinklerMatcher {
         let configuration = user_config.unwrap_or(config::JaroWinklerConfigOptions::default());
         let weight = weight.unwrap_or(1.0);
         JaroWinklerMatcher {
+            name: "Jaro-Winkler".to_owned(),
             config: configuration,
             weight,
         }
@@ -31,9 +33,16 @@ impl JaroWinklerMatcher {
     pub fn default() -> JaroWinklerMatcher {
         let config = config::JaroWinklerConfigOptions::default();
         JaroWinklerMatcher {
+            name: "Jaro-Winkler".to_owned(),
             config,
             weight: 1.0,
         }
+    }
+}
+
+impl Named for JaroWinklerMatcher {
+    fn get_name(&self) -> &str {
+        &self.name[..]
     }
 }
 
@@ -45,11 +54,11 @@ impl Weighted for JaroWinklerMatcher {
     }
 }
 
-impl Compare for JaroWinklerMatcher {
-    fn compare(&self, s1: &str, s2: &str) -> f64 {
+impl Matcher for JaroWinklerMatcher {
+    fn get_score(&self, s1: &str, s2: &str) -> f64 {
         let s1 = self.clean(s1);
         let s2 = self.clean(s2);
-        self.weight * compute::jaro_winkler_score(&s1[..], &s2[..], &self.config)
+        compute::jaro_winkler_score(&s1[..], &s2[..], &self.config)
     }
 }
 
@@ -62,7 +71,7 @@ mod test {
         let matcher = super::JaroWinklerMatcher::default();
         let name1 = "john doe";
         let name2 = "JOHN DOE";
-        assert_eq!(matcher.compare(name1, name2), 1.0);
+        assert_eq!(matcher.get_score(name1, name2), 1.0);
     }
 
     #[test]
@@ -70,7 +79,7 @@ mod test {
         let matcher = super::JaroWinklerMatcher::default();
         let name1 = "joh^ doe";
         let name2 = "joh**doe";
-        assert_eq!(matcher.compare(name1, name2), 1.0);
+        assert_eq!(matcher.get_score(name1, name2), 1.0);
     }
 
     #[test]
@@ -78,15 +87,6 @@ mod test {
         let matcher = super::JaroWinklerMatcher::default();
         let name1 = "  john doe   ";
         let name2 = "JOHN DOE";
-        assert_eq!(matcher.compare(name1, name2), 1.0);
-    }
-
-    #[test]
-    fn test_weighted_match() {
-        let matcher =
-            super::JaroWinklerMatcher::new(None::<config::JaroWinklerConfigOptions>, Some(0.5));
-        let name1 = "JOHN DOE";
-        let name2 = "JOHN DOE";
-        assert_eq!(matcher.compare(name1, name2), 0.5);
+        assert_eq!(matcher.get_score(name1, name2), 1.0);
     }
 }

@@ -9,7 +9,7 @@ fn main(){
 
     // Soundex matcher uses Soundex algorithm to encode each name
     let soundex_matcher = compare::SoundexMatcher::default();
-    let score = soundex_matcher.compare(name_1, name_2);
+    let score = soundex_matcher.get_score(name_1, name_2);
     println!("Soundex Similarity = {}", score);
 
 
@@ -17,6 +17,6 @@ fn main(){
     // encode token as Soundex code,
     // and measure their similarity usin Jaccard Index.
     let soundex_jaccard_matcher = compare::SoundexJaccardMatcher::default();
-    let score = soundex_jaccard_matcher.compare(name_1, name_2);
+    let score = soundex_jaccard_matcher.get_score(name_1, name_2);
     println!("Soundex(Jaccard) Similarity = {}", score);
 }

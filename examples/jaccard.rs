@@ -10,6 +10,6 @@ fn main(){
 
     let name_matcher =
         compare::JaccardMatcher::default();
-    let score = name_matcher.compare(name_1, name_2);
+    let score = name_matcher.get_score(name_1, name_2);
     println!("Jaccard Similarity = {}", score);
 }

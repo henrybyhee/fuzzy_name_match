@@ -49,7 +49,7 @@ Refer to [example](/examples/jaro_winkler.rs).
 let name1 = "John Doe"
 let name2 = "Jon Doe"
 let name_matcher = compare::JaroWinklerMatcher::default();
-let score = name_matcher.compare(name_1, name_2); //0.9666667
+let score = name_matcher.get_score(name_1, name_2); //0.9666667
 ```
 
 ## 2. Jaccard Index (Classic)
@@ -82,7 +82,7 @@ Refer to [example](/examples/jaccard.rs).
 let name1 = "John Doe"
 let name2 = "Jon Doe"
 let name_matcher = compare::JaccardMatcher::default();
-let score = name_matcher.compare(name_1, name_2); // 0.33333
+let score = name_matcher.get_score(name_1, name_2); // 0.33333
 ```
 
 ## 3. Soundex (Classic)
@@ -117,7 +117,7 @@ Refer to [example](/examples/soundex.rs).
 let name1 = "Roberto Doe"
 let name2 = "Rupert Doe"
 let name_matcher = compare::SoundexMatcher::default();
-let score = name_matcher.compare(name_1, name_2); // 1.0
+let score = name_matcher.get_score(name_1, name_2); // 1.0
 ```
 
 ## 4. Soundex-Jaccard (Custom)
@@ -163,7 +163,7 @@ Refer to [example](/examples/soundex.rs).
 let name1 = "Roberto Doe"
 let name2 = "Rupert Doe"
 let name_matcher = compare::SoundexJaccardMatcher::default();
-let score = name_matcher.compare(name_1, name_2); // 1.0
+let score = name_matcher.get_score(name_1, name_2); // 1.0
 ```
 
 ## Practical Use

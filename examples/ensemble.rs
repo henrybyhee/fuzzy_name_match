@@ -14,12 +14,12 @@ fn main(){
     // Ensemble method works better.
     // Jaro-Winkler captures similarity in terms of edit distance
     let jw_matcher = JaroWinklerMatcher::new(None::<config::JaroWinklerConfigOptions>, Some(weight));
-    let jw_score = jw_matcher.compare(name_1, name_2);
+    let jw_score = jw_matcher.get_score(name_1, name_2);
     println!("Jaro-Winkler Score (50%) = {}", jw_score);
 
     // Soundex captures phonetic similarity between two names.
     let soundex_matcher = SoundexJaccardMatcher::new(Some(weight));
-    let soundex_score = soundex_matcher.compare(name_1, name_2);
+    let soundex_score = soundex_matcher.get_score(name_1, name_2);
     println!("Soundex Score (50%) = {}", soundex_score);
 
     let combined = jw_score + soundex_score;
