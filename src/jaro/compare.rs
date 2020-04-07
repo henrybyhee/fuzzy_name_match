@@ -52,6 +52,10 @@ impl Weighted for JaroWinklerMatcher {
     fn get_weight(&self) -> f64 {
         self.weight
     }
+
+    fn set_weight(&mut self, weight: f64) {
+        self.weight = weight;
+    }
 }
 
 impl Matcher for JaroWinklerMatcher {

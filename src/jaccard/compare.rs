@@ -50,6 +50,10 @@ impl Weighted for JaccardMatcher {
     fn get_weight(&self) -> f64 {
         self.weight
     }
+
+    fn set_weight(&mut self, weight: f64) {
+        self.weight = weight;
+    }
 }
 
 impl Matcher for JaccardMatcher {
