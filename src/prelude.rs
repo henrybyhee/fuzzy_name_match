@@ -16,9 +16,14 @@ pub trait Weighted {
     fn get_weight(&self) -> f64;
 }
 
+// Named trait exposes name attribute of concrete type
+pub trait Named {
+    fn get_name(&self) -> &str;
+}
+
 // Is dependent on Clean trait
-pub trait Compare: Clean {
-    // compare method returns the similarity score between two strings
+pub trait Matcher: Clean + Weighted + Named {
+    // get_score method returns the similarity score between two strings
     // s1 and s2. Score is between 0.0 and 1.0.
-    fn compare(&self, s1: &str, s2: &str) -> f64;
+    fn get_score(&self, s1: &str, s2: &str) -> f64;
 }

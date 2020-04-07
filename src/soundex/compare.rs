@@ -7,17 +7,30 @@ use std::collections::HashSet;
 // 1.0 -> Match
 // 0.0 -> No Match
 pub struct SoundexMatcher {
+    name: String,
     weight: f64,
 }
 
 impl SoundexMatcher {
     pub fn new(weight: Option<f64>) -> SoundexMatcher {
         let weight = weight.unwrap_or(1.0);
-        SoundexMatcher { weight }
+        SoundexMatcher {
+            name: "Soundex".to_owned(),
+            weight,
+        }
     }
 
     pub fn default() -> SoundexMatcher {
-        SoundexMatcher { weight: 1.0 }
+        SoundexMatcher {
+            name: "Soundex".to_owned(),
+            weight: 1.0,
+        }
+    }
+}
+
+impl Named for SoundexMatcher {
+    fn get_name(&self) -> &str {
+        &self.name[..]
     }
 }
 
@@ -29,14 +42,14 @@ impl Weighted for SoundexMatcher {
     }
 }
 
-impl Compare for SoundexMatcher {
-    fn compare(&self, s1: &str, s2: &str) -> f64 {
+impl Matcher for SoundexMatcher {
+    fn get_score(&self, s1: &str, s2: &str) -> f64 {
         let cleaned_s1 = self.clean(s1);
         let soundex_s1 = encode::apply_soundex(&cleaned_s1[..]);
         let cleaned_s2 = self.clean(s2);
         let soundex_s2 = encode::apply_soundex(&cleaned_s2[..]);
         if soundex_s1 == soundex_s2 {
-            self.weight * 1.0
+            1.0
         } else {
             0.0
         }
@@ -53,17 +66,24 @@ impl Compare for SoundexMatcher {
 // -> Jaccard Index = 2.0 / 2.0 = 1.0
 // Measures the degree of intersection
 pub struct SoundexJaccardMatcher {
+    name: String,
     weight: f64,
 }
 
 impl SoundexJaccardMatcher {
     pub fn new(weight: Option<f64>) -> SoundexJaccardMatcher {
         let weight = weight.unwrap_or(1.0);
-        SoundexJaccardMatcher { weight }
+        SoundexJaccardMatcher {
+            name: "Soundex-Jaccard".to_owned(),
+            weight,
+        }
     }
 
     pub fn default() -> SoundexJaccardMatcher {
-        SoundexJaccardMatcher { weight: 1.0 }
+        SoundexJaccardMatcher {
+            name: "Soundex-Jaccard".to_owned(),
+            weight: 1.0,
+        }
     }
 
     // tokenize turns every part of a name into its
@@ -81,6 +101,12 @@ impl SoundexJaccardMatcher {
     }
 }
 
+impl Named for SoundexJaccardMatcher {
+    fn get_name(&self) -> &str {
+        &self.name[..]
+    }
+}
+
 impl Clean for SoundexJaccardMatcher {}
 
 impl Weighted for SoundexJaccardMatcher {
@@ -89,13 +115,13 @@ impl Weighted for SoundexJaccardMatcher {
     }
 }
 
-impl Compare for SoundexJaccardMatcher {
-    fn compare(&self, s1: &str, s2: &str) -> f64 {
+impl Matcher for SoundexJaccardMatcher {
+    fn get_score(&self, s1: &str, s2: &str) -> f64 {
         let cleaned_s1 = self.clean(s1);
         let name_1_soundex_set = self.as_tokenized_set(&cleaned_s1[..]);
         let cleaned_s2 = self.clean(s2);
         let name_2_soundex_set = self.as_tokenized_set(&cleaned_s2[..]);
-        self.weight * compute::jaccard_index(&name_1_soundex_set, &name_2_soundex_set)
+        compute::jaccard_index(&name_1_soundex_set, &name_2_soundex_set)
     }
 }
 
@@ -109,16 +135,8 @@ mod test {
         let matcher = SoundexMatcher::default();
         let name1 = "Jame";
         let name2 = "Jimmy";
-        let score = matcher.compare(name1, name2);
+        let score = matcher.get_score(name1, name2);
         assert_eq!(score, 1.0);
-    }
-    #[test]
-    fn test_soundex_matcher_half_weight() {
-        let matcher = SoundexMatcher::new(Some(0.5));
-        let name1 = "Jame";
-        let name2 = "Jimmy";
-        let score = matcher.compare(name1, name2);
-        assert_eq!(score, 0.5);
     }
 
     #[test]
@@ -126,7 +144,7 @@ mod test {
         let matcher = SoundexMatcher::default();
         let name1 = "James";
         let name2 = "Jimmy";
-        let score = matcher.compare(name1, name2);
+        let score = matcher.get_score(name1, name2);
         assert_eq!(score, 0.0);
     }
 
@@ -135,7 +153,7 @@ mod test {
         let matcher = SoundexMatcher::default();
         let name1 = "james";
         let name2 = "JAMES";
-        let score = matcher.compare(name1, name2);
+        let score = matcher.get_score(name1, name2);
         assert_eq!(score, 1.0);
     }
 
@@ -144,7 +162,7 @@ mod test {
         let matcher = SoundexMatcher::default();
         let name1 = "   james    ";
         let name2 = "JAMES";
-        let score = matcher.compare(name1, name2);
+        let score = matcher.get_score(name1, name2);
         assert_eq!(score, 1.0);
     }
 
@@ -153,7 +171,7 @@ mod test {
         let matcher = SoundexJaccardMatcher::default();
         let name1 = "Jame Bond";
         let name2 = "Bane Jimmy";
-        let score = matcher.compare(name1, name2);
+        let score = matcher.get_score(name1, name2);
         assert!(score - 0.333 < 0.1);
     }
 
@@ -162,17 +180,8 @@ mod test {
         let matcher = SoundexJaccardMatcher::default();
         let name1 = "Robert Downey Junior";
         let name2 = "Anthony Rupert";
-        let score = matcher.compare(name1, name2);
+        let score = matcher.get_score(name1, name2);
         assert_eq!(score, 0.25);
-    }
-
-    #[test]
-    fn test_soundex_jaccard_half_weight() {
-        let matcher = SoundexJaccardMatcher::new(Some(0.5));
-        let name1 = "Jame Bond";
-        let name2 = "Bane Jimmy";
-        let score = matcher.compare(name1, name2);
-        assert!(score - 0.1666 < 0.01);
     }
 
     #[test]
@@ -180,7 +189,7 @@ mod test {
         let matcher = SoundexJaccardMatcher::default();
         let name1 = "james";
         let name2 = "JAMES";
-        let score = matcher.compare(name1, name2);
+        let score = matcher.get_score(name1, name2);
         assert_eq!(score, 1.0);
     }
 
@@ -189,7 +198,7 @@ mod test {
         let matcher = SoundexMatcher::default();
         let name1 = "   james    Bay  ";
         let name2 = "JAMES bay";
-        let score = matcher.compare(name1, name2);
+        let score = matcher.get_score(name1, name2);
         assert_eq!(score, 1.0);
     }
 }

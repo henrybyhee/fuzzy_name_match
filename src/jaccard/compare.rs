@@ -3,6 +3,7 @@ use super::super::shared::compute;
 use std::collections::HashSet;
 
 pub struct JaccardMatcher {
+    name: String,
     weight: f64,
 }
 
@@ -14,11 +15,17 @@ pub struct JaccardMatcher {
 impl JaccardMatcher {
     pub fn new(weight: Option<f64>) -> JaccardMatcher {
         let weight = weight.unwrap_or(1.0);
-        JaccardMatcher { weight }
+        JaccardMatcher {
+            name: "Jaccard".to_owned(),
+            weight,
+        }
     }
 
     pub fn default() -> JaccardMatcher {
-        JaccardMatcher { weight: 1.0 }
+        JaccardMatcher {
+            name: "Jaccard".to_owned(),
+            weight: 1.0,
+        }
     }
 
     fn as_tokenized_set(&self, string: &str) -> HashSet<String> {
@@ -31,6 +38,12 @@ impl JaccardMatcher {
     }
 }
 
+impl Named for JaccardMatcher {
+    fn get_name(&self) -> &str {
+        &self.name[..]
+    }
+}
+
 impl Clean for JaccardMatcher {}
 
 impl Weighted for JaccardMatcher {
@@ -39,13 +52,13 @@ impl Weighted for JaccardMatcher {
     }
 }
 
-impl Compare for JaccardMatcher {
-    fn compare(&self, s1: &str, s2: &str) -> f64 {
+impl Matcher for JaccardMatcher {
+    fn get_score(&self, s1: &str, s2: &str) -> f64 {
         let cleaned_s1 = self.clean(s1);
         let tokenized_s1 = self.as_tokenized_set(&cleaned_s1[..]);
         let cleaned_s2 = self.clean(s2);
         let tokenized_s2 = self.as_tokenized_set(&cleaned_s2[..]);
-        self.weight * compute::jaccard_index(&tokenized_s1, &tokenized_s2)
+        compute::jaccard_index(&tokenized_s1, &tokenized_s2)
     }
 }
 
@@ -57,7 +70,7 @@ mod test {
         let matcher = super::JaccardMatcher::default();
         let name1 = "john doe";
         let name2 = "JOHN DOE";
-        assert_eq!(matcher.compare(name1, name2), 1.0);
+        assert_eq!(matcher.get_score(name1, name2), 1.0);
     }
 
     #[test]
@@ -65,7 +78,7 @@ mod test {
         let matcher = super::JaccardMatcher::default();
         let name1 = "joh^ doe";
         let name2 = "joh**doe";
-        assert_eq!(matcher.compare(name1, name2), 1.0);
+        assert_eq!(matcher.get_score(name1, name2), 1.0);
     }
 
     #[test]
@@ -73,14 +86,6 @@ mod test {
         let matcher = super::JaccardMatcher::default();
         let name1 = "  john    doe   ";
         let name2 = "JOHN DOE";
-        assert_eq!(matcher.compare(name1, name2), 1.0);
-    }
-
-    #[test]
-    fn test_weighted_match() {
-        let matcher = super::JaccardMatcher::new(Some(0.5));
-        let name1 = "JOHN DOE";
-        let name2 = "JOHN DOE";
-        assert_eq!(matcher.compare(name1, name2), 0.5);
+        assert_eq!(matcher.get_score(name1, name2), 1.0);
     }
 }
