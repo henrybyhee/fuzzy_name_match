@@ -3,8 +3,7 @@ extern crate name_match;
 use name_match::jaro::config;
 use name_match::jaro::compare::JaroWinklerMatcher;
 use name_match::soundex::compare::SoundexJaccardMatcher;
-use name_match::jaccard::compare::JaccardMatcher;
-use name_match::Compare;
+use name_match::prelude::*;
 
 fn main(){
     let name_1 = "Bond Jmes";

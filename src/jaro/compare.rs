@@ -1,4 +1,4 @@
-use super::super::*;
+use super::super::prelude::*;
 use super::compute;
 use super::config;
 
@@ -49,7 +49,8 @@ impl Compare for JaroWinklerMatcher {
 
 #[cfg(test)]
 mod test {
-    use super::super::super::*;
+    use super::super::super::prelude::*;
+    use super::super::config;
     #[test]
     fn test_case_sensitive_match() {
         let matcher = super::JaroWinklerMatcher::default();
@@ -76,10 +77,8 @@ mod test {
 
     #[test]
     fn test_weighted_match() {
-        let matcher = super::JaroWinklerMatcher::new(
-            None::<jaro::config::JaroWinklerConfigOptions>,
-            Some(0.5),
-        );
+        let matcher =
+            super::JaroWinklerMatcher::new(None::<config::JaroWinklerConfigOptions>, Some(0.5));
         let name1 = "JOHN DOE";
         let name2 = "JOHN DOE";
         assert_eq!(matcher.compare(name1, name2), 0.5);
