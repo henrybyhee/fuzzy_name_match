@@ -39,6 +39,12 @@ impl JaroWinklerMatcher {
 
 impl Clean for JaroWinklerMatcher {}
 
+impl Weighted for JaroWinklerMatcher {
+    fn get_weight(&self) -> f64 {
+        self.weight
+    }
+}
+
 impl Compare for JaroWinklerMatcher {
     fn compare(&self, s1: &str, s2: &str) -> f64 {
         let s1 = self.clean(s1);

@@ -33,6 +33,12 @@ impl JaccardMatcher {
 
 impl Clean for JaccardMatcher {}
 
+impl Weighted for JaccardMatcher {
+    fn get_weight(&self) -> f64 {
+        self.weight
+    }
+}
+
 impl Compare for JaccardMatcher {
     fn compare(&self, s1: &str, s2: &str) -> f64 {
         let cleaned_s1 = self.clean(s1);

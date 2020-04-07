@@ -11,6 +11,11 @@ pub trait Clean {
     }
 }
 
+// Weighted trait exposes the weight attribute of concrete type
+pub trait Weighted {
+    fn get_weight(&self) -> f64;
+}
+
 // Is dependent on Clean trait
 pub trait Compare: Clean {
     // compare method returns the similarity score between two strings
