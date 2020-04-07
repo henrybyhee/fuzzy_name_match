@@ -1,27 +1,29 @@
 extern crate name_match;
 
-use name_match::jaro::config;
 use name_match::jaro::compare::JaroWinklerMatcher;
 use name_match::soundex::compare::SoundexJaccardMatcher;
+use name_match::ensemble::Ensemble;
 use name_match::prelude::*;
 
 fn main(){
     let name_1 = "Bond Jmes";
     let name_2 = "James Sancho Bond";
 
-    let weight = 1. /2.;
-
     // Ensemble method works better.
-    // Jaro-Winkler captures similarity in terms of edit distance
-    let jw_matcher = JaroWinklerMatcher::new(None::<config::JaroWinklerConfigOptions>, Some(weight));
-    let jw_score = jw_matcher.get_score(name_1, name_2);
-    println!("Jaro-Winkler Score (50%) = {}", jw_score);
+    // High Precision: Jaro-Winkler captures similarity in terms of edit distance
+    let jw_matcher = JaroWinklerMatcher::default();
+    // High Recall: Soundex captures phonetic similarity between two names.
+    let soundex_matcher = SoundexJaccardMatcher::default();
 
-    // Soundex captures phonetic similarity between two names.
-    let soundex_matcher = SoundexJaccardMatcher::new(Some(weight));
-    let soundex_score = soundex_matcher.get_score(name_1, name_2);
-    println!("Soundex Score (50%) = {}", soundex_score);
 
-    let combined = jw_score + soundex_score;
-    println!("Combined = {}", combined);
+    let matchers: Vec<Box<dyn Matcher>> = vec![
+        Box::new(jw_matcher),
+        Box::new(soundex_matcher),
+    ];
+
+    let mut ensemble = Ensemble::new(matchers);
+    ensemble.set_equal_weight();
+
+    let score = ensemble.get_aggregated_score(name_1, name_2);
+    println!("Score = {}", score);
 }
