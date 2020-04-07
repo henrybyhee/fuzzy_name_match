@@ -167,6 +167,15 @@ mod test {
     }
 
     #[test]
+    fn test_soundex_half_weight() {
+        let matcher = SoundexMatcher::new(Some(0.5));
+        let name1 = "JAMES";
+        let name2 = "JAMES";
+        let score = matcher.get_weighted_score(name1, name2);
+        assert_eq!(score, 0.5);
+    }
+
+    #[test]
     fn test_soundex_jaccard_half_match() {
         let matcher = SoundexJaccardMatcher::default();
         let name1 = "Jame Bond";
@@ -195,10 +204,19 @@ mod test {
 
     #[test]
     fn test_soundex_jaccard_case_with_whitespaces() {
-        let matcher = SoundexMatcher::default();
+        let matcher = SoundexJaccardMatcher::default();
         let name1 = "   james    Bay  ";
         let name2 = "JAMES bay";
         let score = matcher.get_score(name1, name2);
         assert_eq!(score, 1.0);
+    }
+
+    #[test]
+    fn test_soundex_jaccard_half_weight() {
+        let matcher = SoundexJaccardMatcher::new(Some(0.5));
+        let name1 = "JAMES";
+        let name2 = "JAMES";
+        let score = matcher.get_weighted_score(name1, name2);
+        assert_eq!(score, 0.5);
     }
 }

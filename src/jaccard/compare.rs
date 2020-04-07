@@ -88,4 +88,12 @@ mod test {
         let name2 = "JOHN DOE";
         assert_eq!(matcher.get_score(name1, name2), 1.0);
     }
+
+    #[test]
+    fn test_half_weight() {
+        let matcher = super::JaccardMatcher::new(Some(0.5));
+        let name1 = "JOHN DOE";
+        let name2 = "JOHN DOE";
+        assert_eq!(matcher.get_weighted_score(name1, name2), 0.5);
+    }
 }
