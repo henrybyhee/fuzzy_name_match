@@ -45,6 +45,8 @@ pub trait Clean {
 // Weighted trait exposes the weight attribute of concrete type
 pub trait Weighted {
     fn get_weight(&self) -> f64;
+
+    fn set_weight(&mut self, weight: f64);
 }
 
 // Named trait exposes name attribute of concrete type

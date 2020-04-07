@@ -1,3 +1,4 @@
+pub mod ensemble;
 pub mod jaccard;
 pub mod jaro;
 pub mod prelude;

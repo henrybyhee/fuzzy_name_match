@@ -40,6 +40,10 @@ impl Weighted for SoundexMatcher {
     fn get_weight(&self) -> f64 {
         self.weight
     }
+
+    fn set_weight(&mut self, weight: f64) {
+        self.weight = weight
+    }
 }
 
 impl Matcher for SoundexMatcher {
@@ -112,6 +116,10 @@ impl Clean for SoundexJaccardMatcher {}
 impl Weighted for SoundexJaccardMatcher {
     fn get_weight(&self) -> f64 {
         self.weight
+    }
+
+    fn set_weight(&mut self, weight: f64) {
+        self.weight = weight;
     }
 }
 
