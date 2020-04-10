@@ -1,12 +1,21 @@
 use super::prelude::*;
-use std::marker::{Send, Sync};
+use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct EnsembleResult {
+    pub name1: String,
+    pub name2: String,
+    pub score: f64,
+    pub results: Vec<MatchResult>,
+}
 
 pub struct Ensemble {
-    pub matchers: Vec<Box<dyn Matcher + Send + Sync>>,
+    pub matchers: Vec<Box<dyn Matcher>>,
 }
 
 impl Ensemble {
-    pub fn new(matchers: Vec<Box<dyn Matcher + Send + Sync>>) -> Ensemble {
+    pub fn new(matchers: Vec<Box<dyn Matcher>>) -> Ensemble {
         Ensemble { matchers }
     }
 
@@ -35,6 +44,29 @@ impl Ensemble {
         }
         results
     }
+
+    pub fn get_ensemble_result(&self, name1: &str, name2: &str) -> EnsembleResult {
+        let results = self.get_match_results(name1, name2);
+        let score = results.iter().map(|result| result.weighted_score).sum();
+
+        EnsembleResult {
+            name1: name1.to_owned(),
+            name2: name2.to_owned(),
+            score,
+            results,
+        }
+    }
+
+    pub fn get_ensemble_result_arr(
+        &self,
+        query_name: &str,
+        name_list: Vec<&str>,
+    ) -> Vec<EnsembleResult> {
+        name_list
+            .par_iter()
+            .map(|name| self.get_ensemble_result(query_name, name))
+            .collect()
+    }
 }
 
 #[cfg(test)]
@@ -48,7 +80,7 @@ mod test {
         let jw = JaroWinklerMatcher::default();
         let soundex = SoundexMatcher::default();
 
-        let matchers: Vec<Box<dyn Matcher + Send + Sync>> = vec![Box::new(jw), Box::new(soundex)];
+        let matchers: Vec<Box<dyn Matcher>> = vec![Box::new(jw), Box::new(soundex)];
 
         let mut ensemble = super::Ensemble::new(matchers);
         ensemble.set_equal_weight();
@@ -66,7 +98,7 @@ mod test {
         let jw = JaroWinklerMatcher::default();
         let soundex = SoundexMatcher::default();
 
-        let matchers: Vec<Box<dyn Matcher + Send + Sync>> = vec![Box::new(jw), Box::new(soundex)];
+        let matchers: Vec<Box<dyn Matcher>> = vec![Box::new(jw), Box::new(soundex)];
 
         let mut ensemble = super::Ensemble::new(matchers);
         ensemble.set_equal_weight();

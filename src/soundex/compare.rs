@@ -2,28 +2,31 @@ use super::super::prelude::*;
 use super::super::shared::compute;
 use super::encode;
 use std::collections::HashSet;
+use std::sync::RwLock;
 
 // Soundex is a phonetic algorithm that encodes names in Soundex code.
 // 1.0 -> Match
 // 0.0 -> No Match
 pub struct SoundexMatcher {
     name: String,
-    weight: f64,
+    weight: RwLock<f64>,
 }
 
 impl SoundexMatcher {
     pub fn new(weight: Option<f64>) -> SoundexMatcher {
         let weight = weight.unwrap_or(1.0);
+        let locked_weight = RwLock::new(weight);
         SoundexMatcher {
             name: "Soundex".to_owned(),
-            weight,
+            weight: locked_weight,
         }
     }
 
     pub fn default() -> SoundexMatcher {
+        let locked_weight = RwLock::new(1.0);
         SoundexMatcher {
             name: "Soundex".to_owned(),
-            weight: 1.0,
+            weight: locked_weight,
         }
     }
 }
@@ -38,11 +41,13 @@ impl Clean for SoundexMatcher {}
 
 impl Weighted for SoundexMatcher {
     fn get_weight(&self) -> f64 {
-        self.weight
+        let weight = self.weight.read().unwrap();
+        *weight
     }
 
     fn set_weight(&mut self, weight: f64) {
-        self.weight = weight
+        let mut weight_ptr = self.weight.write().unwrap();
+        *weight_ptr = weight;
     }
 }
 

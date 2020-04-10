@@ -1,10 +1,11 @@
 use super::super::prelude::*;
 use super::super::shared::compute;
 use std::collections::HashSet;
+use std::sync::RwLock;
 
 pub struct JaccardMatcher {
     name: String,
-    weight: f64,
+    weight: RwLock<f64>,
 }
 
 // JaccardMatcher calculates Jaccard Index or (Overlapping Coefficient)
@@ -15,16 +16,18 @@ pub struct JaccardMatcher {
 impl JaccardMatcher {
     pub fn new(weight: Option<f64>) -> JaccardMatcher {
         let weight = weight.unwrap_or(1.0);
+        let locked_weight = RwLock::new(weight);
         JaccardMatcher {
             name: "Jaccard".to_owned(),
-            weight,
+            weight: locked_weight,
         }
     }
 
     pub fn default() -> JaccardMatcher {
+        let weight = RwLock::new(1.0);
         JaccardMatcher {
             name: "Jaccard".to_owned(),
-            weight: 1.0,
+            weight: weight,
         }
     }
 
@@ -48,11 +51,13 @@ impl Clean for JaccardMatcher {}
 
 impl Weighted for JaccardMatcher {
     fn get_weight(&self) -> f64 {
-        self.weight
+        let weight_ptr = self.weight.read().unwrap();
+        *weight_ptr
     }
 
     fn set_weight(&mut self, weight: f64) {
-        self.weight = weight;
+        let mut weight_ptr = self.weight.write().unwrap();
+        *weight_ptr = weight;
     }
 }
 

@@ -16,7 +16,7 @@ fn main(){
     let soundex_matcher = SoundexJaccardMatcher::default();
 
 
-    let matchers: Vec<Box<dyn Matcher + Send + Sync>> = vec![
+    let matchers: Vec<Box<dyn Matcher>> = vec![
         Box::new(jw_matcher),
         Box::new(soundex_matcher),
     ];
@@ -26,4 +26,8 @@ fn main(){
 
     let score = ensemble.get_aggregated_score(name_1, name_2);
     println!("Score = {}", score);
+
+    let name_list = vec!["James Hardy", "David James"];
+    let result_arr = ensemble.get_ensemble_result_arr(name_1, name_list);
+    println!("EnsembleResult: {:?}", result_arr);
 }
