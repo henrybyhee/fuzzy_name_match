@@ -4,10 +4,10 @@ use serde::{Deserialize, Serialize};
 // in greated detail
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MatchResult {
-    name: String,
-    weight: f64,
-    absolute_score: f64,
-    weighted_score: f64,
+    pub name: String,
+    pub weight: f64,
+    pub absolute_score: f64,
+    pub weighted_score: f64,
 }
 
 impl MatchResult {
