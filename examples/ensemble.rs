@@ -16,7 +16,7 @@ fn main(){
     let soundex_matcher = SoundexJaccardMatcher::default();
 
 
-    let matchers: Vec<Box<dyn Matcher>> = vec![
+    let matchers: Vec<Box<dyn Matcher + Send + Sync>> = vec![
         Box::new(jw_matcher),
         Box::new(soundex_matcher),
     ];

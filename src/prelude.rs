@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::marker::{Send, Sync};
 
 // MatcherRule represents the matching result
 // in greated detail
@@ -47,7 +48,7 @@ pub trait Named {
     fn get_name(&self) -> &str;
 }
 
-pub trait Matcher: Clean + Weighted + Named {
+pub trait Matcher: Clean + Weighted + Named + Send + Sync{
     // get_score method returns the similarity score between two strings
     // s1 and s2. Score is between 0.0 and 1.0.
     fn get_score(&self, s1: &str, s2: &str) -> f64;
