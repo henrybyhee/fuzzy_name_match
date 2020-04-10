@@ -1,11 +1,12 @@
 use super::prelude::*;
+use std::marker::{Send, Sync};
 
 pub struct Ensemble {
-    pub matchers: Vec<Box<dyn Matcher>>,
+    pub matchers: Vec<Box<dyn Matcher + Send + Sync>>,
 }
 
 impl Ensemble {
-    pub fn new(matchers: Vec<Box<dyn Matcher>>) -> Ensemble {
+    pub fn new(matchers: Vec<Box<dyn Matcher + Send + Sync>>) -> Ensemble {
         Ensemble { matchers }
     }
 
@@ -47,7 +48,7 @@ mod test {
         let jw = JaroWinklerMatcher::default();
         let soundex = SoundexMatcher::default();
 
-        let matchers: Vec<Box<dyn Matcher>> = vec![Box::new(jw), Box::new(soundex)];
+        let matchers: Vec<Box<dyn Matcher + Send + Sync>> = vec![Box::new(jw), Box::new(soundex)];
 
         let mut ensemble = super::Ensemble::new(matchers);
         ensemble.set_equal_weight();
@@ -65,7 +66,7 @@ mod test {
         let jw = JaroWinklerMatcher::default();
         let soundex = SoundexMatcher::default();
 
-        let matchers: Vec<Box<dyn Matcher>> = vec![Box::new(jw), Box::new(soundex)];
+        let matchers: Vec<Box<dyn Matcher + Send + Sync>> = vec![Box::new(jw), Box::new(soundex)];
 
         let mut ensemble = super::Ensemble::new(matchers);
         ensemble.set_equal_weight();

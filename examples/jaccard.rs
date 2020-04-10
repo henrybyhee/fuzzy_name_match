@@ -2,7 +2,7 @@ extern crate name_match;
 
 use name_match::jaccard::compare;
 use name_match::prelude::*;
-
+use std::fmt;
 
 fn main(){
     let name_1 = "James Bay";
