@@ -1,6 +1,7 @@
 use super::super::prelude::*;
 use super::compute;
 use super::config;
+use std::sync::RwLock;
 
 // JaroWinklerMatcher implements Jaro-Winkler algorithm between
 // two names. Between 0.0 and 1.0.
@@ -12,7 +13,7 @@ use super::config;
 pub struct JaroWinklerMatcher {
     name: String,
     config: config::JaroWinklerConfigOptions,
-    weight: f64,
+    weight: RwLock<f64>,
 }
 
 impl JaroWinklerMatcher {
@@ -23,19 +24,21 @@ impl JaroWinklerMatcher {
     ) -> JaroWinklerMatcher {
         let configuration = user_config.unwrap_or(config::JaroWinklerConfigOptions::default());
         let weight = weight.unwrap_or(1.0);
+        let locked_weight = RwLock::new(weight);
         JaroWinklerMatcher {
             name: "Jaro-Winkler".to_owned(),
             config: configuration,
-            weight,
+            weight: locked_weight,
         }
     }
 
     pub fn default() -> JaroWinklerMatcher {
         let config = config::JaroWinklerConfigOptions::default();
+        let locked_weight = RwLock::new(1.0);
         JaroWinklerMatcher {
             name: "Jaro-Winkler".to_owned(),
             config,
-            weight: 1.0,
+            weight: locked_weight,
         }
     }
 }
@@ -50,11 +53,13 @@ impl Clean for JaroWinklerMatcher {}
 
 impl Weighted for JaroWinklerMatcher {
     fn get_weight(&self) -> f64 {
-        self.weight
+        let weight = self.weight.read().unwrap();
+        *weight
     }
 
     fn set_weight(&mut self, weight: f64) {
-        self.weight = weight;
+        let mut weight_ptr = self.weight.write().unwrap();
+        *weight_ptr = weight;
     }
 }
 

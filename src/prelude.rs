@@ -5,7 +5,7 @@ use std::marker::{Send, Sync};
 // in greated detail
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MatchResult {
-    pub name: String,
+    pub algorithm: String,
     pub weight: f64,
     pub absolute_score: f64,
     pub weighted_score: f64,
@@ -14,14 +14,13 @@ pub struct MatchResult {
 impl MatchResult {
     pub fn new<'a>(name: &str, weight: f64, score: f64) -> MatchResult {
         MatchResult {
-            name: name.to_owned(),
+            algorithm: name.to_owned(),
             weight,
             absolute_score: score,
             weighted_score: score * weight,
         }
     }
 }
-
 
 // Clean trait handles string preprocessing before comparison can take place.
 pub trait Clean {
@@ -37,7 +36,7 @@ pub trait Clean {
 }
 
 // Weighted trait exposes the weight attribute of concrete type
-pub trait Weighted {
+pub trait Weighted: Send + Sync {
     fn get_weight(&self) -> f64;
 
     fn set_weight(&mut self, weight: f64);
@@ -48,7 +47,7 @@ pub trait Named {
     fn get_name(&self) -> &str;
 }
 
-pub trait Matcher: Clean + Weighted + Named + Send + Sync{
+pub trait Matcher: Clean + Weighted + Named {
     // get_score method returns the similarity score between two strings
     // s1 and s2. Score is between 0.0 and 1.0.
     fn get_score(&self, s1: &str, s2: &str) -> f64;
